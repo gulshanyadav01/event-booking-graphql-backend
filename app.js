@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser"); 
 const { graphqlHTTP } = require("express-graphql"); 
 const { buildSchema } = require("graphql");
+const mongoose = require("mongoose"); 
 
 const app = express();
 
@@ -60,7 +61,8 @@ app.use("/graphql", graphqlHTTP({
                 price: +args.eventInput.price,
                 date: args.eventInput.date
             }
-            events.push(event); 
+            events.push(event);
+            return event; 
 
         }
     },
@@ -68,6 +70,12 @@ app.use("/graphql", graphqlHTTP({
 
 })); 
 
-app.listen(PORT, () => {
-    console.log("port is running"); 
-} )
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.pzhj1.mongodb.net/?retryWrites=EventBookingtrue&w=majority`)
+.then(() => {
+    app.listen(PORT, () => {
+        console.log("port is running on 5000"); 
+    })
+})
+.catch(err => {
+    console.log(err); 
+})
