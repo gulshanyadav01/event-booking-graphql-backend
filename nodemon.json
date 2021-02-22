@@ -1,7 +1,8 @@
 {
     "env":{
         "MONGO_USER":"gulshan",
-        "MONGO_PASSWORD":"Tzd8Rx20iYBRgyFG"
+        "MONGO_PASSWORD":"Tzd8Rx20iYBRgyFG",
+        "MONGO_DB":"EventBooking"
     }
 
 }
