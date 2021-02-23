@@ -12,6 +12,28 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const user = userId => {
+    return User.findById(userId)
+    .then(user => {
+        return { ...user._doc, _id: user.id, createdEvents:events.bind(this, user._doc.createdEvents) }
+    })
+    .catch(err => {
+        throw err; 
+    })
+}
+
+const events = eventIds => {
+    return Event.find({ _id: {$in: eventIds}})
+    .then(events => {
+        return events.map(event => {
+            return { ...event._doc, _id: event.id, creator: user.bind(this, event._doc.creator)}
+        })
+    })
+    .catch(err => {
+        throw err; 
+    })
+}
+
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -22,11 +44,13 @@ app.use(
           description: String!
           price: Float!
           date: String!
+          creator: User!
         }
         type User {
           _id: ID!
           email: String!
           password: String
+          createdEvents: [Event!]
         }
         input EventInput {
           title: String!
@@ -55,7 +79,11 @@ app.use(
         return Event.find()
           .then(events => {
             return events.map(event => {
-              return { ...event._doc, _id: event.id };
+              return {
+                ...event._doc,
+                 _id: event.id , 
+                 creator: user.bind(this, event._doc.creator)
+                };
             });
           })
           .catch(err => {
@@ -68,14 +96,14 @@ app.use(
           description: args.eventInput.description,
           price: +args.eventInput.price,
           date: new Date(args.eventInput.date),
-          creator: '60347ec1691879f5ad36a557'
+          creator: '603488d1d2b05fff018adfe1'
         });
         let createdEvent;
         return event
           .save()
           .then(result => {
             createdEvent = { ...result._doc, _id: result._doc._id.toString() };
-            return User.findById('60347ec1691879f5ad36a557');
+            return User.findById('603488d1d2b05fff018adfe1');
           })
           .then(user => {
             if (!user) {
