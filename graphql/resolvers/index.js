@@ -156,7 +156,7 @@ module.exports = {
             updatedAt: new Date(booking._doc.updatedAt).toISOString()
           }
       }catch(err){
-        throw err;
+        throw err
       }
     }, 
 
