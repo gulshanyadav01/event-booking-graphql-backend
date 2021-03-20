@@ -22,7 +22,10 @@ const events = async eventIds => {
   try{
     const events =  await Event.find({ _id: {$in: eventIds}})
     events.map(event => {
-            return { ...event._doc, _id: event.id, creator: user.bind(this, event._doc.creator)}
+            return { 
+                ...event._doc,
+               _id: event.id,
+                creator: user.bind(this, event._doc.creator)}
         })
     return events;
     }
